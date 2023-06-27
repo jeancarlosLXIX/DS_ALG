@@ -108,7 +108,7 @@ class LinkedList:
             if itr.data == data_after:
                 print("Found")
                 node = Node(data_to_insert,itr.next)
-                itr = node
+                itr.next = node
                 break
 
             itr = itr.next
