@@ -1,27 +1,32 @@
 import random
 class Node:
-    def __init__(self,data= None, next_=None) -> None:
-        self.data = data
+    def __init__(self,data= None,prev= None,next_=None) -> None:
         self.next = next_
+        self.data = data
+        self.prev = prev
     
-class LinkedList:
+class DoubleLinked:
     def __init__(self) -> None:
         self.head = None
-        self.size = 0
+        self.tail = self.head
 
     def insert_at_begining(self,data):
-        node = Node(data,self.head)
+        if self.head == None:
+            self.head = Node(data)
+            self.tail = self.head
+            return
+        # 1 ->
+        node = Node(data)
+        self.head.prev = node
+        node.next = self.head
         self.head = node
-
-    
-        self.size += 1
     
     def insert_at(self, index: int, data: int):
         if index < 0 or index > self.size:
             raise Exception("Invalid index")
 
         if index == 0:
-            self.insert_at_beginning(data)
+            self.insert_at_begining(data)
             return
 
         count = 0
@@ -39,14 +44,11 @@ class LinkedList:
         if count == self.size - 1:  # Insert at the end of the list
             node = Node(data)
             itr.next = node
-
-        self.size += 1
     
     def insert_values(self,values:list):
         for value in values:
             self.inserting_at_end(value)
 
-    
     def remove_at(self,index:int):
         if index<0 or self.size<=index:
             return
@@ -70,20 +72,27 @@ class LinkedList:
 
     
     def inserting_at_end(self,data):
-        node = Node(data)
+        
 
         if self.head == None:
+            node = Node(data)
             self.head = node
-            self.size += 1
+            self.tail = self.head
+            return
+        
+        if self.head.next == None:
+            node = Node(data,prev=self.head)
+            self.head.next = node
             return
 
         itr = self.head
 
+        node = Node(data)
         while itr:
             if itr.next == None:
-                
+                node.prev = itr
                 itr.next = node
-                self.size += 1
+                self.tail = node
                 return
             
             itr = itr.next
@@ -97,7 +106,17 @@ class LinkedList:
 
             itr = itr.next
         
-        print(f"Values: {values}")
+        print(f"Forward: {values}")
+    
+    def prev_print(self):
+        itr = self.tail
+        values = ""
+        while itr:
+            values += f" <- {itr.data}"
+
+            itr = itr.prev
+        
+        print(f"Reverse: {values}")
     
     def insert_after_value(self, data_after, data_to_insert):
     # Search for first occurance of data_after value in linked list
@@ -112,12 +131,7 @@ class LinkedList:
 
             itr = itr.next
             count += 1
-
-            
-
-    # Now insert data_to_insert after data_after node
         
-
     def remove_by_value(self, data):
     # Remove first node that contains data
         if self.head.data == data:
@@ -141,22 +155,15 @@ class LinkedList:
 
 
 
-ll = LinkedList()
-ll.insert_values(["banana","mango","grapes","orange"])
-ll.print()
-ll.insert_after_value("mango","apple") # insert apple after mango
-ll.print()
-ll.remove_by_value("orange") # remove orange from linked list
-print("Removed by value")
-ll.print()
-ll.remove_by_value("figs")
-ll.print()
-ll.remove_by_value("banana")
-ll.remove_by_value("mango")
-ll.remove_by_value("apple")
-ll.remove_by_value("grapes")
-ll.print()
+dl = DoubleLinked()
+for x in range(1,10):
+    dl.insert_at_begining(x)
 
+# dl.insert_at_begining(1)
+dl.inserting_at_end(10)
+dl.print()
+
+dl.prev_print()
 
         
 
